@@ -13,7 +13,7 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t abhicse2013/secrepos .'
+                    sh 'docker build -t abhicse2013/secrepos:$BUILD_NUMBER .'
                 }
             }
         }
@@ -24,16 +24,10 @@ pipeline {
                    sh 'docker login -u abhicse2013 -p ${dockerhubpwd}'
 
 }
-                   sh 'docker push abhicse2013/secrepos'
+                   sh 'docker push abhicse2013/secrepos:$BUILD_NUMBER'
                 }
             }
         }
-        stage('Deploy to k8s'){
-            steps{
-                script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'k8sconfigpwd')
-                }
-            }
-        }
+
     }
 }
